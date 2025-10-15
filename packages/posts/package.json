@@ -1,0 +1,8 @@
+{
+  "name": "@technical-writing/posts",
+  "version": "0.1.0",
+  "private": true,
+  "description": "MDX blog posts repository",
+  "main": "./index.ts",
+  "types": "./index.ts"
+}
