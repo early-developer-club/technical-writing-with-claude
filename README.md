@@ -17,15 +17,28 @@
 
 ### 개발 시간
 - **Phase 1 (모노레포 구조 구축)**: 약 30분
+- **Phase 2 (MDX 렌더링 시스템)**: 약 45분
+- **총 개발 시간**: 약 1시간 15분
 - **작업 일자**: 2025-10-16
 - **개발 방식**: Claude Code와의 페어 프로그래밍
 
 ### 개발 과정
+
+#### Phase 1 (완료)
 1. 프로젝트 기획 및 PRD 작성
 2. pnpm workspace 기반 모노레포 구조 설계
 3. Next.js 15 + React 19 + TypeScript 앱 초기화
 4. 공유 패키지 설정 (ui, posts)
 5. 개발 환경 테스트 및 검증
+
+#### Phase 2 (완료)
+1. shadcn/ui 설치 및 설정 (New York 스타일, Slate 컬러)
+2. MDX 관련 패키지 설치 (next-mdx-remote, gray-matter, rehype 플러그인)
+3. MDX 유틸리티 함수 구현 (포스트 파싱, 렌더링)
+4. 샘플 MDX 포스트 작성 (hello-world, nextjs-15-features)
+5. 블로그 메인 페이지 구현 (포스트 목록, 헤더, 푸터)
+6. 포스트 상세 페이지 구현 (동적 라우팅, MDX 렌더링)
+7. Typography 및 코드 하이라이팅 설정
 
 ## 기술 스택
 
@@ -34,12 +47,13 @@
 - **React**: [React](https://react.dev/) 19.1.0
 - **언어**: [TypeScript](https://www.typescriptlang.org/) 5.x
 - **스타일링**: [TailwindCSS](https://tailwindcss.com/) 4.x
-- **UI 컴포넌트**: [shadcn/ui](https://ui.shadcn.com/) (예정)
+- **UI 컴포넌트**: [shadcn/ui](https://ui.shadcn.com/)
 
 ### 콘텐츠 관리
-- **MDX**: next-mdx-remote 또는 @next/mdx (예정)
-- **Frontmatter**: gray-matter (예정)
-- **Syntax Highlighting**: Shiki 또는 Prism (예정)
+- **MDX**: [next-mdx-remote](https://github.com/hashicorp/next-mdx-remote) 5.0.0
+- **Frontmatter**: [gray-matter](https://github.com/jonschlinkert/gray-matter) 4.0.3
+- **Syntax Highlighting**: [rehype-highlight](https://github.com/rehypejs/rehype-highlight) 7.0.2 + [highlight.js](https://highlightjs.org/) 11.11.1
+- **Typography**: [@tailwindcss/typography](https://tailwindcss.com/docs/typography-plugin) 0.5.19
 
 ### 모노레포
 - **패키지 매니저**: [pnpm](https://pnpm.io/) workspace
@@ -98,13 +112,15 @@ technical-writing-with-claude/
 - [x] 기본 폴더 구조 생성
 - [x] MCP 서버 설정 (Sequential Thinking, Context7, Chrome DevTools)
 
-### 🚧 Phase 2: 핵심 기능 구현 (다음 단계)
-- [ ] shadcn/ui 설치 및 설정
-- [ ] MDX 파싱 및 렌더링 시스템
-- [ ] 포스트 메타데이터 관리 (Frontmatter)
-- [ ] 블로그 메인 페이지 구현
-- [ ] 포스트 상세 페이지 구현
-- [ ] Draft/Published 구분 로직
+### ✅ Phase 2: 핵심 기능 구현 (완료)
+- [x] shadcn/ui 설치 및 설정
+- [x] MDX 파싱 및 렌더링 시스템
+- [x] 포스트 메타데이터 관리 (Frontmatter)
+- [x] 블로그 메인 페이지 구현
+- [x] 포스트 상세 페이지 구현
+- [x] Draft/Published 구분 로직
+- [x] 코드 신택스 하이라이팅 (rehype-highlight + highlight.js)
+- [x] Typography 스타일링 (@tailwindcss/typography)
 
 ### 📋 Phase 3: SEO 및 최적화
 - [ ] Sitemap 자동 생성 (`/sitemap.xml`)
@@ -233,6 +249,6 @@ MIT License (예정)
 
 ---
 
-**프로젝트 상태**: 🚧 Phase 1 완료, Phase 2 진행 예정
+**프로젝트 상태**: ✅ Phase 1, 2 완료 | 📋 Phase 3 대기 중
 **최종 업데이트**: 2025-10-16
 **개발 방식**: Claude Code 페어 프로그래밍

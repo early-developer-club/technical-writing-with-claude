@@ -1,0 +1,109 @@
+---
+title: "Next.js 15의 새로운 기능 살펴보기"
+description: "Next.js 15에서 추가된 주요 기능들과 개선사항을 알아봅니다. Turbopack, React 19 지원, 그리고 성능 향상에 대해 다룹니다."
+date: "2025-10-15"
+tags: ["Next.js", "React", "Web Development", "Frontend"]
+category: "기술"
+author: "Technical Writing Team"
+status: "published"
+featured: false
+---
+
+# Next.js 15의 새로운 기능
+
+Next.js 15가 출시되면서 많은 개선사항과 새로운 기능들이 추가되었습니다. 이 글에서는 주요 변경사항들을 살펴보겠습니다.
+
+## 주요 업데이트
+
+### 1. React 19 지원
+
+Next.js 15는 React 19를 공식 지원합니다:
+
+```jsx
+// React 19의 새로운 훅 사용 예제
+import { use } from 'react';
+
+function BlogPost({ postPromise }) {
+  const post = use(postPromise);
+
+  return (
+    <article>
+      <h1>{post.title}</h1>
+      <p>{post.content}</p>
+    </article>
+  );
+}
+```
+
+### 2. Turbopack 안정화
+
+개발 서버가 훨씬 빨라졌습니다:
+
+- ⚡ 최대 10배 빠른 시작 시간
+- 🔥 Hot Module Replacement(HMR) 개선
+- 📦 더 효율적인 번들링
+
+### 3. 향상된 캐싱 전략
+
+```typescript
+// app/posts/[slug]/page.tsx
+export async function generateMetadata({ params }) {
+  const post = await getPost(params.slug);
+
+  return {
+    title: post.title,
+    description: post.description,
+  };
+}
+
+export default async function PostPage({ params }) {
+  const post = await getPost(params.slug);
+
+  return <Article post={post} />;
+}
+
+// 재검증 시간 설정
+export const revalidate = 3600; // 1시간
+```
+
+## 성능 개선
+
+Next.js 15는 다음과 같은 성능 개선을 제공합니다:
+
+| 기능 | Next.js 14 | Next.js 15 | 개선율 |
+|------|------------|------------|--------|
+| 빌드 시간 | 45초 | 30초 | 33% ↓ |
+| HMR | 500ms | 200ms | 60% ↓ |
+| 메모리 사용 | 800MB | 600MB | 25% ↓ |
+
+## 마이그레이션 가이드
+
+### 1. 의존성 업데이트
+
+```bash
+pnpm add next@latest react@latest react-dom@latest
+```
+
+### 2. 설정 파일 수정
+
+```typescript
+// next.config.ts
+import type { NextConfig } from 'next';
+
+const nextConfig: NextConfig = {
+  // Turbopack 활성화
+  experimental: {
+    turbo: {
+      enabled: true,
+    },
+  },
+};
+
+export default nextConfig;
+```
+
+## 결론
+
+Next.js 15는 성능과 개발자 경험 모두에서 큰 발전을 이루었습니다. 특히 Turbopack의 안정화와 React 19 지원은 매우 기대되는 기능입니다.
+
+더 자세한 정보는 [Next.js 공식 문서](https://nextjs.org/docs)를 참고하세요.

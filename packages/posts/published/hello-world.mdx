@@ -1,0 +1,107 @@
+---
+title: "Technical Writing with Claude와 함께하는 첫 포스트"
+description: "Claude AI를 활용한 기술 블로그 플랫폼의 첫 번째 포스트입니다. 프로젝트 소개와 함께 MDX의 강력한 기능들을 살펴봅니다."
+date: "2025-10-16"
+tags: ["Next.js", "React", "Claude AI", "MDX", "Technical Writing"]
+category: "프로젝트"
+author: "Technical Writing Team"
+status: "published"
+featured: true
+---
+
+# 안녕하세요! 👋
+
+**Technical Writing with Claude**에 오신 것을 환영합니다. 이것은 Claude AI와 Next.js를 결합한 혁신적인 기술 블로그 플랫폼입니다.
+
+## 프로젝트 소개
+
+이 프로젝트는 다음과 같은 목표를 가지고 있습니다:
+
+1. **AI 기반 글쓰기**: Claude Code와의 대화만으로 고품질 기술 문서 작성
+2. **Zero Backend**: 백엔드 없이 프론트엔드만으로 완전한 블로그 운영
+3. **개발자 친화적**: 모노레포 구조로 확장 가능한 아키텍처
+4. **프로덕션 레디**: SEO, RSS, Sitemap 등 모든 필수 기능 포함
+
+## 기술 스택
+
+우리는 최신 웹 기술을 사용합니다:
+
+- **프레임워크**: Next.js 15.5.5
+- **React**: React 19.1.0
+- **언어**: TypeScript 5.x
+- **스타일링**: TailwindCSS 4.x
+- **콘텐츠**: MDX (next-mdx-remote)
+
+## MDX의 강력함
+
+MDX를 사용하면 마크다운 안에서 React 컴포넌트를 사용할 수 있습니다!
+
+### 코드 예제
+
+다음은 TypeScript로 작성된 간단한 함수입니다:
+
+```typescript
+interface Post {
+  slug: string;
+  title: string;
+  description: string;
+  date: string;
+  tags: string[];
+}
+
+function getAllPosts(): Post[] {
+  // 모든 포스트를 가져오는 로직
+  return posts.sort((a, b) =>
+    new Date(b.date).getTime() - new Date(a.date).getTime()
+  );
+}
+```
+
+### 리스트 예제
+
+프로젝트의 주요 기능들:
+
+- ✅ MDX 파싱 및 렌더링
+- ✅ Frontmatter 기반 메타데이터 관리
+- ✅ 코드 신택스 하이라이팅
+- ✅ 자동 목차(TOC) 생성
+- ✅ 태그 및 카테고리 시스템
+- ✅ SEO 최적화
+
+### 인용구
+
+> "좋은 코드는 그 자체로 최고의 문서다."
+> — Steve McConnell
+
+## 개발 과정
+
+이 프로젝트는 Claude Code와의 페어 프로그래밍으로 만들어졌습니다:
+
+1. **Phase 1**: 모노레포 구조 구축 (완료)
+2. **Phase 2**: MDX 렌더링 시스템 (진행 중)
+3. **Phase 3**: SEO 및 최적화 (예정)
+4. **Phase 4**: Claude 통합 (예정)
+5. **Phase 5**: UI 개선 (예정)
+6. **Phase 6**: 배포 및 문서화 (예정)
+
+## 다음 단계
+
+앞으로 다음과 같은 기능들을 추가할 예정입니다:
+
+- 📝 다크 모드 지원
+- 🔍 검색 기능
+- 💬 댓글 시스템 (giscus)
+- 📊 포스트 통계
+- 🌐 다국어 지원
+
+## 마치며
+
+이 플랫폼이 개발자들의 기술 블로그 운영을 더욱 쉽고 즐겁게 만들어줄 것입니다.
+
+관심 있으신 분들은 [GitHub 저장소](https://github.com/early-developer-club/technical-writing-with-claude)를 방문해주세요!
+
+---
+
+**작성일**: 2025년 10월 16일
+**카테고리**: 프로젝트
+**태그**: Next.js, React, Claude AI, MDX, Technical Writing
