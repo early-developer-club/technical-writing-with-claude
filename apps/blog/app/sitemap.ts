@@ -1,5 +1,5 @@
 import { MetadataRoute } from 'next';
-import { getAllPublishedPosts, getAllTags, getAllCategories } from '@/lib/posts';
+import { getAllPublishedPosts, getAllTags } from '@/lib/posts';
 import { BLOG_METADATA } from '@/lib/constants';
 
 /**
@@ -9,7 +9,6 @@ import { BLOG_METADATA } from '@/lib/constants';
 export default function sitemap(): MetadataRoute.Sitemap {
   const posts = getAllPublishedPosts();
   const tags = getAllTags();
-  const categories = getAllCategories();
 
   const baseUrl = BLOG_METADATA.siteUrl;
 

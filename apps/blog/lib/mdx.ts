@@ -31,7 +31,8 @@ const mdxOptions = {
 export async function compileMDXContent(source: string) {
   const { content, frontmatter } = await compileMDX<PostFrontmatter>({
     source,
-    options: mdxOptions,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    options: mdxOptions as any,
   });
 
   return { content, frontmatter };

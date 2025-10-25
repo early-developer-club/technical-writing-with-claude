@@ -1,5 +1,5 @@
 import { getAllPublishedPosts } from '@/lib/posts';
-import { BLOG_METADATA, RSS_CONFIG } from '@/lib/constants';
+import { RSS_CONFIG } from '@/lib/constants';
 
 /**
  * RSS 2.0 Feed 생성

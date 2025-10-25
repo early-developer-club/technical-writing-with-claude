@@ -64,7 +64,7 @@ export default async function PostPage({ params }: PageProps) {
 
   const readingTime = calculateReadingTime(post.content);
 
-  const mdxOptions = {
+  const options = {
     mdxOptions: {
       rehypePlugins: [
         rehypeHighlight,
@@ -132,7 +132,8 @@ export default async function PostPage({ params }: PageProps) {
 
         {/* MDX Content */}
         <div className="prose prose-slate dark:prose-invert max-w-none">
-          <MDXRemote source={post.content} options={mdxOptions} />
+          {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+          <MDXRemote source={post.content} options={options as any} />
         </div>
 
         {/* Post Footer */}
