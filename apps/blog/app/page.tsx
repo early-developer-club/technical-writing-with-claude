@@ -1,33 +1,15 @@
 import Link from 'next/link';
 import { getAllPublishedPosts } from '@/lib/posts';
 import { formatDate } from '@/lib/mdx';
+import { Header } from '@/components/header';
+import { Footer } from '@/components/footer';
 
 export default function Home() {
   const posts = getAllPublishedPosts();
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="border-b">
-        <div className="container mx-auto px-4 py-6">
-          <div className="flex items-center justify-between">
-            <Link href="/" className="text-2xl font-bold">
-              Technical Writing with Claude
-            </Link>
-            <nav className="flex gap-6">
-              <Link href="/" className="hover:text-primary transition-colors">
-                Home
-              </Link>
-              <Link href="/posts" className="hover:text-primary transition-colors">
-                Posts
-              </Link>
-              <Link href="/tags" className="hover:text-primary transition-colors">
-                Tags
-              </Link>
-            </nav>
-          </div>
-        </div>
-      </header>
+      <Header currentPath="/" />
 
       {/* Hero Section */}
       <section className="border-b bg-muted/30">
@@ -102,34 +84,7 @@ export default function Home() {
         )}
       </main>
 
-      {/* Footer */}
-      <footer className="border-t mt-12">
-        <div className="container mx-auto px-4 py-8 text-center text-sm text-muted-foreground">
-          <p>
-            Built with{' '}
-            <a
-              href="https://nextjs.org"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="underline hover:text-foreground"
-            >
-              Next.js
-            </a>
-            {' '}and{' '}
-            <a
-              href="https://claude.ai"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="underline hover:text-foreground"
-            >
-              Claude AI
-            </a>
-          </p>
-          <p className="mt-2">
-            © 2025 Technical Writing with Claude. All rights reserved.
-          </p>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }
