@@ -1,0 +1,392 @@
+---
+title: "React 19의 새로운 Hooks 완벽 가이드"
+description: "React 19에서 새롭게 추가된 use(), useOptimistic(), useFormStatus() 훅을 실전 예제와 함께 알아봅니다."
+date: "2025-01-20"
+tags: ["React", "React 19", "Hooks", "Tutorial"]
+category: "Frontend"
+author: "Claude Code"
+status: "draft"
+featured: true
+---
+
+# React 19의 새로운 Hooks 완벽 가이드
+
+## 개요
+
+React 19에서는 개발자 경험을 크게 개선하는 세 가지 새로운 훅이 추가되었습니다:
+
+- **`use()`**: Promise와 Context를 더 편리하게 사용
+- **`useOptimistic()`**: 낙관적 UI 업데이트 구현
+- **`useFormStatus()`**: 폼 제출 상태 관리
+
+이 가이드에서는 각 훅의 사용법을 실전 예제와 함께 알아봅니다.
+
+---
+
+## 사전 준비
+
+### 필요한 버전
+
+```json
+{
+  "react": "^19.0.0",
+  "react-dom": "^19.0.0"
+}
+```
+
+### 설치
+
+```bash
+npm install react@19 react-dom@19
+```
+
+---
+
+## 1. use() - Promise와 Context 사용 개선
+
+### 기존 방식의 문제점
+
+**Before (React 18)**:
+```typescript
+function UserProfile({ userId }: { userId: string }) {
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchUser(userId).then(data => {
+      setUser(data);
+      setLoading(false);
+    });
+  }, [userId]);
+
+  if (loading) return <div>Loading...</div>;
+  return <div>{user.name}</div>;
+}
+```
+
+문제점:
+- 보일러플레이트 코드 많음
+- Loading 상태 수동 관리
+- useEffect 의존성 관리 필요
+
+### use()로 개선
+
+**After (React 19)**:
+```typescript
+import { use } from 'react';
+
+function UserProfile({ userPromise }: { userPromise: Promise<User> }) {
+  // Promise를 직접 사용!
+  const user = use(userPromise);
+
+  return <div>{user.name}</div>;
+}
+
+// 사용
+function App() {
+  const userPromise = fetchUser('123');
+
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <UserProfile userPromise={userPromise} />
+    </Suspense>
+  );
+}
+```
+
+장점:
+- ✅ 코드 간결화
+- ✅ Suspense와 자연스러운 통합
+- ✅ 자동 Loading 처리
+
+### Context에서도 사용 가능
+
+```typescript
+import { use } from 'react';
+
+const ThemeContext = createContext('light');
+
+function Button() {
+  // useContext 대신 use 사용 가능
+  const theme = use(ThemeContext);
+
+  return <button className={theme}>Click me</button>;
+}
+```
+
+---
+
+## 2. useOptimistic() - 낙관적 UI 업데이트
+
+### 낙관적 UI란?
+
+서버 응답을 기다리지 않고 먼저 UI를 업데이트하여 더 빠른 사용자 경험을 제공하는 패턴입니다.
+
+### 실전 예제: 좋아요 기능
+
+```typescript
+import { useOptimistic, useState } from 'react';
+
+interface Post {
+  id: string;
+  likes: number;
+  isLiked: boolean;
+}
+
+function LikeButton({ post }: { post: Post }) {
+  const [optimisticPost, addOptimisticLike] = useOptimistic(
+    post,
+    (currentPost, newLikes: number) => ({
+      ...currentPost,
+      likes: newLikes,
+      isLiked: !currentPost.isLiked
+    })
+  );
+
+  async function handleLike() {
+    // 즉시 UI 업데이트 (낙관적)
+    const newLikes = optimisticPost.isLiked
+      ? optimisticPost.likes - 1
+      : optimisticPost.likes + 1;
+
+    addOptimisticLike(newLikes);
+
+    // 서버 요청 (백그라운드)
+    await fetch(`/api/posts/${post.id}/like`, {
+      method: 'POST',
+      body: JSON.stringify({ isLiked: !optimisticPost.isLiked })
+    });
+  }
+
+  return (
+    <button onClick={handleLike}>
+      {optimisticPost.isLiked ? '❤️' : '🤍'} {optimisticPost.likes}
+    </button>
+  );
+}
+```
+
+### 작동 방식
+
+1. **사용자 클릭** → `addOptimisticLike()` 호출
+2. **즉시 UI 업데이트** → 사용자는 즉각적인 피드백 확인
+3. **서버 요청** → 백그라운드에서 실제 업데이트 수행
+4. **응답 수신** → 서버 데이터로 최종 동기화
+
+---
+
+## 3. useFormStatus() - 폼 제출 상태 관리
+
+### 기존 방식의 문제점
+
+```typescript
+function Form() {
+  const [isPending, setIsPending] = useState(false);
+
+  async function handleSubmit(e: FormEvent) {
+    e.preventDefault();
+    setIsPending(true);
+
+    try {
+      await submitForm(data);
+    } finally {
+      setIsPending(false);
+    }
+  }
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <button disabled={isPending}>
+        {isPending ? 'Submitting...' : 'Submit'}
+      </button>
+    </form>
+  );
+}
+```
+
+### useFormStatus()로 개선
+
+```typescript
+import { useFormStatus } from 'react-dom';
+
+// Submit 버튼 컴포넌트
+function SubmitButton() {
+  const { pending, data, method, action } = useFormStatus();
+
+  return (
+    <button type="submit" disabled={pending}>
+      {pending ? 'Submitting...' : 'Submit'}
+    </button>
+  );
+}
+
+// 폼 컴포넌트
+function Form() {
+  async function handleSubmit(formData: FormData) {
+    'use server'; // Server Action
+
+    const name = formData.get('name');
+    await saveToDatabase(name);
+  }
+
+  return (
+    <form action={handleSubmit}>
+      <input name="name" required />
+      <SubmitButton />
+    </form>
+  );
+}
+```
+
+장점:
+- ✅ 상태 관리 자동화
+- ✅ Server Actions와 완벽한 통합
+- ✅ 폼 데이터 접근 간편
+
+### 고급 예제: 실시간 검증
+
+```typescript
+function EmailInput() {
+  const { pending, data } = useFormStatus();
+  const email = data?.get('email') as string;
+
+  return (
+    <div>
+      <input
+        name="email"
+        type="email"
+        disabled={pending}
+      />
+      {pending && <span>Checking availability...</span>}
+    </div>
+  );
+}
+```
+
+---
+
+## 실전 프로젝트: Todo 앱에 적용하기
+
+세 가지 훅을 모두 활용한 Todo 앱:
+
+```typescript
+import { use, useOptimistic, Suspense } from 'react';
+import { useFormStatus } from 'react-dom';
+
+interface Todo {
+  id: string;
+  text: string;
+  completed: boolean;
+}
+
+// 1. use()로 초기 데이터 로드
+function TodoList({ todosPromise }: { todosPromise: Promise<Todo[]> }) {
+  const initialTodos = use(todosPromise);
+
+  // 2. useOptimistic()로 낙관적 업데이트
+  const [optimisticTodos, addOptimisticTodo] = useOptimistic(
+    initialTodos,
+    (state, newTodo: Todo) => [...state, newTodo]
+  );
+
+  async function addTodo(formData: FormData) {
+    'use server';
+
+    const text = formData.get('text') as string;
+    const newTodo = {
+      id: crypto.randomUUID(),
+      text,
+      completed: false
+    };
+
+    // 즉시 UI에 추가
+    addOptimisticTodo(newTodo);
+
+    // 서버에 저장
+    await saveTodo(newTodo);
+  }
+
+  return (
+    <div>
+      <form action={addTodo}>
+        <input name="text" required />
+        <AddButton />
+      </form>
+
+      <ul>
+        {optimisticTodos.map(todo => (
+          <li key={todo.id}>{todo.text}</li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+// 3. useFormStatus()로 버튼 상태 관리
+function AddButton() {
+  const { pending } = useFormStatus();
+
+  return (
+    <button type="submit" disabled={pending}>
+      {pending ? 'Adding...' : 'Add Todo'}
+    </button>
+  );
+}
+
+// App
+function App() {
+  const todosPromise = fetchTodos();
+
+  return (
+    <Suspense fallback={<div>Loading todos...</div>}>
+      <TodoList todosPromise={todosPromise} />
+    </Suspense>
+  );
+}
+```
+
+---
+
+## 마이그레이션 팁
+
+### 점진적 적용 전략
+
+1. **Phase 1**: 새 기능부터 React 19 훅 사용
+2. **Phase 2**: 복잡한 useEffect를 `use()`로 리팩토링
+3. **Phase 3**: 폼 제출 로직을 `useFormStatus()`로 변경
+4. **Phase 4**: 낙관적 UI가 필요한 곳에 `useOptimistic()` 적용
+
+### 주의사항
+
+#### use()
+- ⚠️ Suspense 경계 필수
+- ⚠️ Promise는 반드시 캐싱 필요 (매 렌더마다 새로운 Promise 생성 금지)
+
+#### useOptimistic()
+- ⚠️ 서버 에러 처리 필수
+- ⚠️ 낙관적 업데이트 실패 시 롤백 로직 구현
+
+#### useFormStatus()
+- ⚠️ 폼의 자식 컴포넌트에서만 사용 가능
+- ⚠️ Server Actions와 함께 사용 권장
+
+---
+
+## 다음 단계
+
+- [ ] [React 19 Server Components 이해하기](#)
+- [ ] [React Compiler 도입 가이드](#)
+- [ ] [Next.js 15와 React 19 통합](#)
+
+---
+
+## 참고 자료
+
+- [React 19 Release Notes](https://react.dev/blog/2024/12/05/react-19)
+- [React Docs - use](https://react.dev/reference/react/use)
+- [React Docs - useOptimistic](https://react.dev/reference/react/useOptimistic)
+- [React Docs - useFormStatus](https://react.dev/reference/react-dom/hooks/useFormStatus)
+
+---
+
+**이 글이 도움이 되었나요?** 댓글로 피드백을 남겨주세요!

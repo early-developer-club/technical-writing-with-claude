@@ -138,14 +138,14 @@ technical-writing-with-claude/
 - [x] robots.txt 생성
 - [x] SEO 메타데이터 최적화
 
-### 📋 Phase 4: Claude 통합
-- [ ] Claude Code 워크플로우 문서화
-- [ ] MDX 템플릿 작성
-- [ ] 프롬프트 가이드 작성
-- [ ] 예제 포스트 생성
-- [ ] Document Classifier Agent 통합
-- [ ] Text Refinement Agent 통합
-- [ ] Information Architect Agent 통합
+### ✅ Phase 4: Claude 통합 (완료)
+- [x] Claude Code 워크플로우 문서화 (`.claude/docs/workflow.md`)
+- [x] MDX 템플릿 작성 (4개: Tutorial, Troubleshooting, Reference, Explanation)
+- [x] 프롬프트 가이드 작성 (`.claude/docs/prompts.md`)
+- [x] 예제 포스트 생성 (3개: React 19 Hooks, Next.js 빌드 에러, TypeScript Utility Types)
+- [x] Document Classifier Agent 가이드 (technical-writing-guide.md 포함)
+- [x] Text Refinement Agent 가이드 (technical-writing-guide.md 포함)
+- [x] Information Architect Agent 가이드 (technical-writing-guide.md 포함)
 
 ### 📋 Phase 5: UI 개선 및 테스트
 - [ ] 다크 모드 구현
@@ -232,8 +232,25 @@ Vercel이 자동으로 빌드 및 배포를 진행합니다.
 
 ## 문서
 
+### 📚 프로젝트 문서
 - [PRD (제품 요구사항 문서)](.claude/docs/prd.md)
 - [Technical Writing Guide](.claude/docs/technical-writing-guide.md)
+
+### ✍️ Claude Code 가이드
+- [워크플로우 가이드](.claude/docs/workflow.md) - 블로그 작성 전체 프로세스
+- [프롬프트 가이드](.claude/docs/prompts.md) - 효과적인 프롬프트 작성법
+
+### 📝 MDX 템플릿
+- [템플릿 사용 가이드](packages/posts/templates/README.md)
+- [Tutorial 템플릿](packages/posts/templates/tutorial.mdx) - 학습 중심 글
+- [Troubleshooting 템플릿](packages/posts/templates/troubleshooting.mdx) - 문제 해결 글
+- [Reference 템플릿](packages/posts/templates/reference.mdx) - 참조 문서
+- [Explanation 템플릿](packages/posts/templates/explanation.mdx) - 개념 설명 글
+
+### 📖 예제 포스트
+- [React 19 Hooks](packages/posts/drafts/react-19-new-hooks.mdx) - Tutorial 예제
+- [Next.js 빌드 에러 해결](packages/posts/drafts/debugging-nextjs-build-errors.mdx) - Troubleshooting 예제
+- [TypeScript Utility Types](packages/posts/drafts/typescript-utility-types-guide.mdx) - Reference 예제
 
 ## 기여
 
@@ -258,6 +275,6 @@ MIT License (예정)
 
 ---
 
-**프로젝트 상태**: ✅ Phase 1, 2, 3 완료 | 📋 Phase 4 대기 중
-**최종 업데이트**: 2025-10-16
+**프로젝트 상태**: ✅ Phase 1, 2, 3, 4 완료 | 📋 Phase 5 대기 중
+**최종 업데이트**: 2025-10-25
 **개발 방식**: Claude Code 페어 프로그래밍

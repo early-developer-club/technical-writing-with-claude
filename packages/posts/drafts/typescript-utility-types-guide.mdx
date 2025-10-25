@@ -1,0 +1,600 @@
+---
+title: "TypeScript Utility Types 완벽 가이드"
+description: "TypeScript의 모든 Utility Types를 실전 예제와 함께 마스터하세요. 초급부터 고급까지 체계적으로 정리했습니다."
+date: "2025-01-20"
+tags: ["TypeScript", "Utility Types", "Reference", "Type System"]
+category: "Reference"
+author: "Claude Code"
+status: "draft"
+featured: true
+---
+
+# TypeScript Utility Types 완벽 가이드
+
+## 개요
+
+TypeScript는 타입 변환을 쉽게 하기 위한 여러 Utility Types를 제공합니다. 이 가이드에서는 모든 Utility Types를 난이도별로 분류하고, 실전 예제와 함께 설명합니다.
+
+---
+
+## 난이도별 분류
+
+- 🟢 **초급**: 가장 자주 사용되는 기본 타입
+- 🟡 **중급**: 특정 상황에서 유용한 타입
+- 🔴 **고급**: 복잡한 타입 조작
+
+---
+
+## 🟢 초급 Utility Types
+
+### `Partial<T>`
+
+**용도**: 모든 속성을 선택적(optional)으로 만듦
+
+**시그니처**:
+```typescript
+type Partial<T> = {
+  [P in keyof T]?: T[P];
+}
+```
+
+**예제**:
+```typescript
+interface User {
+  id: number;
+  name: string;
+  email: string;
+}
+
+// 모든 속성이 선택적
+type PartialUser = Partial<User>;
+// { id?: number; name?: string; email?: string; }
+
+// 실전 활용: 업데이트 함수
+function updateUser(user: User, updates: Partial<User>): User {
+  return { ...user, ...updates };
+}
+
+const user: User = { id: 1, name: 'Alice', email: 'alice@example.com' };
+const updated = updateUser(user, { name: 'Bob' }); // ✅ email 없어도 OK
+```
+
+---
+
+### `Required<T>`
+
+**용도**: 모든 속성을 필수로 만듦 (Partial의 반대)
+
+**예제**:
+```typescript
+interface Config {
+  host?: string;
+  port?: number;
+  timeout?: number;
+}
+
+type RequiredConfig = Required<Config>;
+// { host: string; port: number; timeout: number; }
+
+function connect(config: RequiredConfig) {
+  // 모든 속성이 반드시 존재함을 보장
+  console.log(`Connecting to ${config.host}:${config.port}`);
+}
+```
+
+---
+
+### `Readonly<T>`
+
+**용도**: 모든 속성을 읽기 전용으로 만듦
+
+**예제**:
+```typescript
+interface Point {
+  x: number;
+  y: number;
+}
+
+const point: Readonly<Point> = { x: 10, y: 20 };
+point.x = 30; // ❌ Error: Cannot assign to 'x' because it is a read-only property
+
+// 실전 활용: 불변 데이터 구조
+function freeze<T>(obj: T): Readonly<T> {
+  return Object.freeze(obj);
+}
+
+const immutablePoint = freeze({ x: 1, y: 2 });
+```
+
+---
+
+### `Pick<T, K>`
+
+**용도**: 타입에서 특정 속성만 선택
+
+**시그니처**:
+```typescript
+type Pick<T, K extends keyof T> = {
+  [P in K]: T[P];
+}
+```
+
+**예제**:
+```typescript
+interface User {
+  id: number;
+  name: string;
+  email: string;
+  password: string;
+}
+
+// id와 name만 선택
+type UserPreview = Pick<User, 'id' | 'name'>;
+// { id: number; name: string; }
+
+// 실전 활용: API 응답 타입
+type PublicUser = Pick<User, 'id' | 'name' | 'email'>;
+// password 제외
+
+function getPublicProfile(user: User): PublicUser {
+  return {
+    id: user.id,
+    name: user.name,
+    email: user.email
+  };
+}
+```
+
+---
+
+### `Omit<T, K>`
+
+**용도**: 타입에서 특정 속성 제외 (Pick의 반대)
+
+**예제**:
+```typescript
+interface User {
+  id: number;
+  name: string;
+  email: string;
+  password: string;
+}
+
+// password 제외
+type UserWithoutPassword = Omit<User, 'password'>;
+// { id: number; name: string; email: string; }
+
+// 실전 활용: 폼 데이터 타입
+type UserFormData = Omit<User, 'id'>;
+// 새 사용자 생성 시 id는 서버에서 생성
+
+function createUser(data: UserFormData): User {
+  return {
+    id: generateId(),
+    ...data
+  };
+}
+```
+
+---
+
+### `Record<K, T>`
+
+**용도**: 키-값 쌍의 타입 생성
+
+**시그니처**:
+```typescript
+type Record<K extends keyof any, T> = {
+  [P in K]: T;
+}
+```
+
+**예제**:
+```typescript
+// 문자열 키, 숫자 값
+type PageNumbers = Record<string, number>;
+const pages: PageNumbers = {
+  home: 1,
+  about: 2,
+  contact: 3
+};
+
+// 실전 활용: 상태 관리
+type LoadingState = 'idle' | 'loading' | 'success' | 'error';
+type LoadingMessages = Record<LoadingState, string>;
+
+const messages: LoadingMessages = {
+  idle: 'Ready to start',
+  loading: 'Loading...',
+  success: 'Completed!',
+  error: 'Failed'
+};
+
+// 더 복잡한 예제
+type UserRole = 'admin' | 'user' | 'guest';
+
+interface Permission {
+  read: boolean;
+  write: boolean;
+  delete: boolean;
+}
+
+type Permissions = Record<UserRole, Permission>;
+
+const permissions: Permissions = {
+  admin: { read: true, write: true, delete: true },
+  user: { read: true, write: true, delete: false },
+  guest: { read: true, write: false, delete: false }
+};
+```
+
+---
+
+## 🟡 중급 Utility Types
+
+### `Exclude<T, U>`
+
+**용도**: Union 타입에서 특정 타입 제거
+
+**예제**:
+```typescript
+type AllEvents = 'click' | 'scroll' | 'mousemove' | 'keydown';
+
+// 'scroll'과 'mousemove' 제거
+type UserEvents = Exclude<AllEvents, 'scroll' | 'mousemove'>;
+// 'click' | 'keydown'
+
+// 실전 활용
+type Primitive = string | number | boolean | null | undefined;
+type NonNullablePrimitive = Exclude<Primitive, null | undefined>;
+// string | number | boolean
+```
+
+---
+
+### `Extract<T, U>`
+
+**용도**: Union 타입에서 특정 타입만 추출 (Exclude의 반대)
+
+**예제**:
+```typescript
+type Shape = 'circle' | 'square' | 'triangle' | 'rectangle';
+type RoundShapes = Extract<Shape, 'circle' | 'oval' | 'ellipse'>;
+// 'circle' (실제로 존재하는 것만)
+
+// 실전 활용: 함수 타입만 추출
+type MixedType = string | number | (() => void) | ((x: number) => number);
+type FunctionTypes = Extract<MixedType, Function>;
+// (() => void) | ((x: number) => number)
+```
+
+---
+
+### `NonNullable<T>`
+
+**용도**: null과 undefined 제거
+
+**예제**:
+```typescript
+type MaybeString = string | null | undefined;
+type DefiniteString = NonNullable<MaybeString>;
+// string
+
+// 실전 활용
+function processValue(value: string | null | undefined) {
+  if (value) {
+    // TypeScript는 여기서 value가 NonNullable임을 알지 못함
+    const length = value.length; // 괜찮지만 명확하지 않음
+  }
+}
+
+function processValueSafe(value: NonNullable<string | null | undefined>) {
+  // 명확하게 null/undefined가 없음을 보장
+  const length = value.length; // ✅
+}
+```
+
+---
+
+### `ReturnType<T>`
+
+**용도**: 함수의 반환 타입 추출
+
+**예제**:
+```typescript
+function getUser() {
+  return {
+    id: 1,
+    name: 'Alice',
+    email: 'alice@example.com'
+  };
+}
+
+type User = ReturnType<typeof getUser>;
+// { id: number; name: string; email: string; }
+
+// 실전 활용: API 응답 타입
+async function fetchTodos() {
+  const response = await fetch('/api/todos');
+  return response.json();
+}
+
+type Todos = Awaited<ReturnType<typeof fetchTodos>>;
+```
+
+---
+
+### `Parameters<T>`
+
+**용도**: 함수의 파라미터 타입을 튜플로 추출
+
+**예제**:
+```typescript
+function createUser(name: string, age: number, email: string) {
+  return { name, age, email };
+}
+
+type CreateUserParams = Parameters<typeof createUser>;
+// [name: string, age: number, email: string]
+
+// 실전 활용: 고차 함수
+function withLogging<T extends (...args: any[]) => any>(
+  fn: T
+) {
+  return (...args: Parameters<T>): ReturnType<T> => {
+    console.log('Calling with:', args);
+    const result = fn(...args);
+    console.log('Result:', result);
+    return result;
+  };
+}
+
+const loggedCreateUser = withLogging(createUser);
+loggedCreateUser('Alice', 25, 'alice@example.com');
+```
+
+---
+
+## 🔴 고급 Utility Types
+
+### `ConstructorParameters<T>`
+
+**용도**: 클래스 생성자의 파라미터 타입 추출
+
+**예제**:
+```typescript
+class User {
+  constructor(
+    public name: string,
+    public age: number
+  ) {}
+}
+
+type UserParams = ConstructorParameters<typeof User>;
+// [name: string, age: number]
+
+// 실전 활용: 팩토리 함수
+function createUser(...args: ConstructorParameters<typeof User>): User {
+  return new User(...args);
+}
+```
+
+---
+
+### `InstanceType<T>`
+
+**용도**: 클래스의 인스턴스 타입 추출
+
+**예제**:
+```typescript
+class User {
+  constructor(public name: string) {}
+
+  greet() {
+    return `Hello, ${this.name}`;
+  }
+}
+
+type UserInstance = InstanceType<typeof User>;
+// User
+
+// 실전 활용
+function processUser(user: InstanceType<typeof User>) {
+  console.log(user.greet());
+}
+```
+
+---
+
+### `ThisParameterType<T>`
+
+**용도**: 함수의 this 파라미터 타입 추출
+
+**예제**:
+```typescript
+function greet(this: { name: string }) {
+  return `Hello, ${this.name}`;
+}
+
+type ThisType = ThisParameterType<typeof greet>;
+// { name: string }
+```
+
+---
+
+### `Awaited<T>`
+
+**용도**: Promise의 반환 타입 추출
+
+**예제**:
+```typescript
+type AsyncData = Promise<{ id: number; name: string }>;
+type Data = Awaited<AsyncData>;
+// { id: number; name: string }
+
+// 중첩 Promise도 처리
+type NestedPromise = Promise<Promise<string>>;
+type UnwrappedString = Awaited<NestedPromise>;
+// string
+
+// 실전 활용
+async function fetchUser(): Promise<User> {
+  const response = await fetch('/api/user');
+  return response.json();
+}
+
+type UserData = Awaited<ReturnType<typeof fetchUser>>;
+```
+
+---
+
+## 실전 조합 예제
+
+### 예제 1: API 응답 타입 생성
+
+```typescript
+interface ApiResponse<T> {
+  data: T;
+  status: number;
+  message: string;
+}
+
+type UserResponse = ApiResponse<User>;
+type UsersResponse = ApiResponse<User[]>;
+
+// Partial을 활용한 업데이트 타입
+type UpdateUserRequest = Partial<Omit<User, 'id'>>;
+
+async function updateUser(
+  id: number,
+  updates: UpdateUserRequest
+): Promise<UserResponse> {
+  // 구현
+}
+```
+
+---
+
+### 예제 2: 폼 상태 관리
+
+```typescript
+interface FormState<T> {
+  values: T;
+  errors: Partial<Record<keyof T, string>>;
+  touched: Partial<Record<keyof T, boolean>>;
+}
+
+interface LoginForm {
+  email: string;
+  password: string;
+  rememberMe: boolean;
+}
+
+type LoginFormState = FormState<LoginForm>;
+/*
+{
+  values: LoginForm;
+  errors: Partial<Record<'email' | 'password' | 'rememberMe', string>>;
+  touched: Partial<Record<'email' | 'password' | 'rememberMe', boolean>>;
+}
+*/
+```
+
+---
+
+### 예제 3: 이벤트 핸들러 타입
+
+```typescript
+type ButtonEvents = {
+  onClick: (event: MouseEvent) => void;
+  onHover: (event: MouseEvent) => void;
+  onFocus: (event: FocusEvent) => void;
+};
+
+// 이벤트 이름만 추출
+type EventNames = keyof ButtonEvents;
+// 'onClick' | 'onHover' | 'onFocus'
+
+// 이벤트 핸들러 타입만 추출
+type EventHandlers = ButtonEvents[keyof ButtonEvents];
+// ((event: MouseEvent) => void) | ((event: FocusEvent) => void)
+
+// Parameters와 조합
+type ClickEventParam = Parameters<ButtonEvents['onClick']>[0];
+// MouseEvent
+```
+
+---
+
+## 성능 고려사항
+
+### 컴파일 시간
+
+복잡한 Utility Type 조합은 컴파일 시간을 증가시킬 수 있습니다:
+
+```typescript
+// ❌ 너무 복잡 (컴파일 느림)
+type VeryComplexType = Partial<
+  Record<
+    Extract<keyof SomeType, string>,
+    NonNullable<ReturnType<typeof someFunction>>
+  >
+>;
+
+// ✅ 단계별로 분리
+type Step1 = Extract<keyof SomeType, string>;
+type Step2 = ReturnType<typeof someFunction>;
+type Step3 = NonNullable<Step2>;
+type BetterComplexType = Partial<Record<Step1, Step3>>;
+```
+
+---
+
+## 마이그레이션 팁
+
+### JavaScript → TypeScript
+
+```typescript
+// JavaScript
+function updateUser(user, updates) {
+  return { ...user, ...updates };
+}
+
+// TypeScript with Utility Types
+function updateUser(user: User, updates: Partial<User>): User {
+  return { ...user, ...updates };
+}
+```
+
+---
+
+## Quick Reference
+
+| Utility Type | 용도 | 난이도 |
+|--------------|------|--------|
+| `Partial<T>` | 모든 속성 선택적 | 🟢 |
+| `Required<T>` | 모든 속성 필수 | 🟢 |
+| `Readonly<T>` | 모든 속성 읽기 전용 | 🟢 |
+| `Pick<T, K>` | 특정 속성만 선택 | 🟢 |
+| `Omit<T, K>` | 특정 속성 제외 | 🟢 |
+| `Record<K, T>` | 키-값 타입 생성 | 🟢 |
+| `Exclude<T, U>` | Union에서 타입 제거 | 🟡 |
+| `Extract<T, U>` | Union에서 타입 추출 | 🟡 |
+| `NonNullable<T>` | null/undefined 제거 | 🟡 |
+| `ReturnType<T>` | 함수 반환 타입 | 🟡 |
+| `Parameters<T>` | 함수 파라미터 타입 | 🟡 |
+| `Awaited<T>` | Promise 반환 타입 | 🔴 |
+| `ConstructorParameters<T>` | 생성자 파라미터 | 🔴 |
+| `InstanceType<T>` | 클래스 인스턴스 타입 | 🔴 |
+
+---
+
+## 참고 자료
+
+- [TypeScript Handbook - Utility Types](https://www.typescriptlang.org/docs/handbook/utility-types.html)
+- [TypeScript Deep Dive](https://basarat.gitbook.io/typescript/)
+- [Type Challenges](https://github.com/type-challenges/type-challenges)
+
+---
+
+**더 궁금한 Utility Type이 있나요?** 댓글로 질문해주세요!

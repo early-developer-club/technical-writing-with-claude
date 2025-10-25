@@ -1,0 +1,443 @@
+---
+title: "[API/라이브러리/도구] 완벽 가이드"
+description: "[API/라이브러리/도구]의 모든 기능을 체계적으로 정리한 참조 문서입니다."
+date: "2025-01-01"
+tags: ["Reference", "API", "기술태그"]
+category: "Reference"
+author: "Your Name"
+status: "draft"
+featured: false
+---
+
+# [API/라이브러리/도구] 완벽 가이드
+
+## 개요
+
+### 소개
+
+[API/라이브러리/도구]는 [용도와 주요 기능을 간략히 설명]
+
+### 주요 특징
+
+- ✅ **[특징 1]**: [설명]
+- ✅ **[특징 2]**: [설명]
+- ✅ **[특징 3]**: [설명]
+
+### 설치
+
+```bash
+# npm
+npm install [package-name]
+
+# yarn
+yarn add [package-name]
+
+# pnpm
+pnpm add [package-name]
+```
+
+### 기본 사용법
+
+```typescript
+import { Feature } from '[package-name]';
+
+const example = new Feature();
+```
+
+---
+
+## 난이도별 분류
+
+이 문서의 항목들은 다음과 같이 분류됩니다:
+
+- 🟢 **초급**: 기본적이고 자주 사용되는 기능
+- 🟡 **중급**: 특정 상황에서 유용한 기능
+- 🔴 **고급**: 복잡하거나 전문적인 사용 사례
+
+---
+
+## API Reference
+
+### [카테고리 1: 핵심 기능]
+
+#### `functionName()` 🟢
+
+**용도**: [이 함수가 하는 일을 한 줄로]
+
+**시그니처**:
+```typescript
+function functionName(
+  param1: Type1,
+  param2: Type2,
+  options?: Options
+): ReturnType
+```
+
+**파라미터**:
+
+| 이름 | 타입 | 필수 | 기본값 | 설명 |
+|------|------|------|--------|------|
+| `param1` | `Type1` | ✅ | - | [파라미터 설명] |
+| `param2` | `Type2` | ✅ | - | [파라미터 설명] |
+| `options` | `Options` | ❌ | `{}` | [옵션 설명] |
+
+**반환값**:
+
+| 타입 | 설명 |
+|------|------|
+| `ReturnType` | [반환값 설명] |
+
+**예제**:
+
+```typescript
+// 기본 사용
+const result = functionName('value1', 'value2');
+
+// 옵션과 함께 사용
+const result = functionName('value1', 'value2', {
+  option1: true,
+  option2: 'custom'
+});
+```
+
+**에러**:
+
+이 함수는 다음 경우 에러를 발생시킵니다:
+
+```typescript
+// TypeError: param1 must be a string
+functionName(123, 'value2');
+
+// ValidationError: param2 is required
+functionName('value1');
+```
+
+**참고**:
+- [추가 정보나 팁]
+- [관련 함수 링크]
+
+---
+
+#### `anotherFunction()` 🟢
+
+[위와 동일한 구조로 작성]
+
+---
+
+### [카테고리 2: 고급 기능]
+
+#### `advancedFunction()` 🔴
+
+**용도**: [고급 기능 설명]
+
+**시그니처**:
+```typescript
+function advancedFunction<T>(
+  data: T[],
+  predicate: (item: T) => boolean
+): T[]
+```
+
+**제네릭 타입**:
+
+| 이름 | 제약 | 설명 |
+|------|------|------|
+| `T` | `extends object` | [타입 설명] |
+
+**파라미터**:
+
+| 이름 | 타입 | 필수 | 설명 |
+|------|------|------|------|
+| `data` | `T[]` | ✅ | [파라미터 설명] |
+| `predicate` | `(item: T) => boolean` | ✅ | [파라미터 설명] |
+
+**예제**:
+
+```typescript
+interface User {
+  id: number;
+  name: string;
+  active: boolean;
+}
+
+const users: User[] = [
+  { id: 1, name: 'Alice', active: true },
+  { id: 2, name: 'Bob', active: false }
+];
+
+// 활성 사용자만 필터링
+const activeUsers = advancedFunction(users, user => user.active);
+```
+
+---
+
+## 타입 정의
+
+### `OptionsType`
+
+**정의**:
+```typescript
+interface OptionsType {
+  option1?: boolean;
+  option2?: string;
+  option3?: number;
+}
+```
+
+**속성**:
+
+| 이름 | 타입 | 필수 | 기본값 | 설명 |
+|------|------|------|--------|------|
+| `option1` | `boolean` | ❌ | `false` | [설명] |
+| `option2` | `string` | ❌ | `'default'` | [설명] |
+| `option3` | `number` | ❌ | `0` | [설명] |
+
+**예제**:
+
+```typescript
+const options: OptionsType = {
+  option1: true,
+  option2: 'custom'
+};
+```
+
+---
+
+### `ReturnType`
+
+**정의**:
+```typescript
+type ReturnType = {
+  success: boolean;
+  data?: any;
+  error?: Error;
+}
+```
+
+---
+
+## 유틸리티 함수
+
+### 헬퍼 함수들
+
+#### `isValid()` 🟢
+
+```typescript
+function isValid(value: unknown): boolean
+```
+
+**용도**: 값의 유효성을 검사합니다.
+
+**예제**:
+```typescript
+if (isValid(data)) {
+  // 안전하게 사용
+}
+```
+
+---
+
+#### `transform()` 🟡
+
+```typescript
+function transform<T, U>(
+  input: T,
+  transformer: (value: T) => U
+): U
+```
+
+**용도**: 데이터를 변환합니다.
+
+**예제**:
+```typescript
+const num = transform('42', str => parseInt(str));
+// num === 42
+```
+
+---
+
+## 실전 예제
+
+### 예제 1: 기본 사용 패턴
+
+```typescript
+import { Feature, Options } from '[package-name]';
+
+// 초기화
+const feature = new Feature({
+  config1: 'value1',
+  config2: true
+});
+
+// 사용
+const result = feature.method('input');
+
+console.log(result);
+// Output: [예상 출력]
+```
+
+---
+
+### 예제 2: 고급 사용 패턴
+
+```typescript
+import { AdvancedFeature } from '[package-name]';
+
+// 커스텀 설정
+const advanced = new AdvancedFeature({
+  strategy: 'custom',
+  middleware: [
+    (data) => transformData(data),
+    (data) => validateData(data)
+  ]
+});
+
+// 체이닝
+const result = advanced
+  .step1()
+  .step2()
+  .step3()
+  .execute();
+```
+
+---
+
+### 예제 3: React와 통합
+
+```typescript
+import { useFeature } from '[package-name]/react';
+
+function Component() {
+  const { data, loading, error } = useFeature({
+    param1: 'value1'
+  });
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error.message}</div>;
+
+  return <div>{data}</div>;
+}
+```
+
+---
+
+## 베스트 프랙티스
+
+### 1. [프랙티스 1]
+
+**권장** ✅:
+```typescript
+// Good
+const good = doSomething({ safe: true });
+```
+
+**비권장** ❌:
+```typescript
+// Bad
+const bad = doSomething();
+```
+
+**이유**: [설명]
+
+---
+
+### 2. [프랙티스 2]
+
+[위와 동일한 구조]
+
+---
+
+## 성능 고려사항
+
+### 메모리 사용
+
+- [기능 1]: ~[크기]MB
+- [기능 2]: ~[크기]KB
+
+### 실행 시간
+
+| 함수 | 시간 복잡도 | 설명 |
+|------|-------------|------|
+| `function1` | O(n) | [설명] |
+| `function2` | O(1) | [설명] |
+| `function3` | O(n²) | [설명] ⚠️ |
+
+### 최적화 팁
+
+1. **[팁 1]**: [설명]
+2. **[팁 2]**: [설명]
+3. **[팁 3]**: [설명]
+
+---
+
+## 마이그레이션 가이드
+
+### v1 → v2
+
+**Breaking Changes**:
+
+1. **[변경사항 1]**
+
+   **Before (v1)**:
+   ```typescript
+   oldFunction(param);
+   ```
+
+   **After (v2)**:
+   ```typescript
+   newFunction({ param });
+   ```
+
+2. **[변경사항 2]**
+
+   [설명 및 코드]
+
+---
+
+## FAQ
+
+### Q: [자주 묻는 질문 1]
+
+**A**: [답변]
+
+```typescript
+// 예제
+```
+
+---
+
+### Q: [자주 묻는 질문 2]
+
+**A**: [답변]
+
+---
+
+## 참고 자료
+
+### 공식 문서
+
+- [API Documentation](https://docs.example.com/api)
+- [GitHub Repository](https://github.com/org/repo)
+- [Changelog](https://github.com/org/repo/blob/main/CHANGELOG.md)
+
+### 추가 자료
+
+- [튜토리얼](link)
+- [비디오 강의](link)
+- [커뮤니티 포럼](link)
+
+---
+
+## 버전 정보
+
+| 버전 | 릴리즈 날짜 | 주요 변경사항 |
+|------|-------------|--------------|
+| v2.0.0 | 2025-01-15 | [주요 변경사항] |
+| v1.5.0 | 2024-12-01 | [새 기능] |
+| v1.0.0 | 2024-10-01 | [초기 릴리즈] |
+
+---
+
+**마지막 업데이트**: [날짜]
+**문서 버전**: 1.0
+**라이브러리 버전**: [버전]
